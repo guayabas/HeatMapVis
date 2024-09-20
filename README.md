@@ -16,10 +16,12 @@ The following are the steps I used to solve the *Graphics Challenge Problem* whe
 git clone https://github.com/guayabas/HeatMapVis.git heatmapvis
 cd heatmapvis
 mkdir build
-cd build
-cmake ..
-cmake --build .
-./Debug/App.exe
+
+# Window - PowerShell
+cmake -S . -B .\build\ -Wno-dev ; cmake --build .\build\ ; .\build\Debug\HeatMapVis.exe
+
+# Unix - Shell
+cmake -S . -B .\build\ -Wno-dev && cmake --build .\build\ && .\build\Debug\HeatMapVis
 ```
 
 ### What Is A 2D Scalar Field?
@@ -98,7 +100,7 @@ ScalarField2D generateConstant2DScalarField(int width = 10, int height = 10, flo
 ```
 </details>
 
-### 2. Color-map the scalar field
+### 2. Color Map The Scalar Field
 <details><summary>Show Content</summary>
 
 To do this we simply need to do 
@@ -113,7 +115,7 @@ For this, we have to introduce two things
 1. Passing data from the CPU to GPU
 2. Shaders (specifically the fragment shader)
 
-#### Passing data from CPU to GPU
+#### Passing Data From CPU To GPU
 What we want is basically to move the `std::vector<float> data` from the `ScalarField2D` data structure into the GPU. To do so one can use the concept of *textures* in the graphics world. These are not more than buffers of GPU memory that can have different dimensions (commonly 1D, 2D, or 3D) and data types (such as int, float, or even 3|4 components -commonly used as RGB|A channels-).
 
 In OpeGL this can be done like
@@ -173,10 +175,83 @@ which does a linear interpolation between those two colors provided a value.
 That is great you think, but what are the `vTextureCoordinates`? Those are simply a *coordinate space* that ranges between 0 and 1 (commonly known as UV space). You are familiar with a coordinate space since elementary school which is the real coordinate space that say things like *a point is at the position (10, 25)*. To understand a little more about UV space just imagine a square, you can define it via its geometrical points (a = [-1, -1], b = [-1, 1],  c = [1, 1], d = [1, -1]) but also via its texture points (uv_a = [0, 0], uv_b = [1, 0], uv_c = [1, 1], uv_d = [0, 1])
 </details>
 
-### 3.Render the heatmap using OpenGL.
+### 3.Render The Heatmap Using OpenGL.
 
-### 4. Optional tasks
+### 4. Optional Tasks
 
 #### Loading 2D Scalar Field From External File
 
+For the following task does not have code (yet, limited time to finish this challenge as tech interview) but it has ideas on how to implement them given this framework
+
 #### Adding Camera
+
+### Solution
+
+Here are some images comparison between the ones created with the Python code provided as reference (right image) and the ones created with the solution of this repository (left image)
+
+<details><summary>Constant : f(x, y) = 0</summary>
+Grid Size : (10, 10)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_constant.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_constant.png" style="width: 45%;">
+</p>
+</details>
+
+<details><summary>Linear X : f(x, y) = x</summary>
+Grid Size : (10, 10)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_linearx_small.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_linearx_small.png" style="width: 45%;">
+</p>
+Grid Size : (100, 100)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_linearx_large.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_linearx_large.png" style="width: 45%;">
+</p>
+</details>
+
+<details><summary>Linear XY : f(x, y) = (x + y)</summary>
+Grid Size : (10, 10)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_linearxy_small.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_linearxy_small.png" style="width: 45%;">
+</p>
+Grid Size : (100, 100)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_linearxy_large.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_linearxy_large.png" style="width: 45%;">
+</p>
+</details>
+
+<details><summary>Quadratic : f(x, y) = (x * x + y * y)</summary>
+Grid Size : (10, 10)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_quadratic_small.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_quadratic_small.png" style="width: 45%;">
+</p>
+Grid Size : (100, 100)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_quadratic_large.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_quadratic_large.png" style="width: 45%;">
+</p>
+</details>
+
+<details open><summary>Provided Example : f(x, y) = sin(x * x + y * y)</summary>
+Grid Size : (10, 10)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_reference_small.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_small.png" style="width: 45%;">
+</p>
+Grid Size : (100, 100)
+<p align="center">
+    <img src="./resources/images/scalarfield2d_solution_reference_large.png" style="width: 45%;">
+    <img src="./resources/images/scalarfield2d_python_reference_large.png" style="width: 45%;">
+</p>
+</details>
+
+<p align="center">
+    <video width="800" height="600" controls>
+        <source src="./resources/videos/solution.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</p>
