@@ -431,9 +431,7 @@ int main(int, char **)
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-
         glClear(GL_COLOR_BUFFER_BIT);
-
         glUseProgram(shaderProgramID);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -441,7 +439,6 @@ int main(int, char **)
         glDrawElements(GL_TRIANGLES, quadGeometry.indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glUseProgram(0);
-
         glfwSwapBuffers(window);
     }
 
